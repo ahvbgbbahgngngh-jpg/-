@@ -1,0 +1,75 @@
+export default {
+  async fetch(req) {
+    const USER_PASS="1234",ADMIN_PASS="9999";
+    globalThis.CODES=globalThis.CODES||new Set(["ABC123","XYZ456"]);
+    globalThis.CONFIGS=globalThis.CONFIGS||[
+      "vless://bb4244a1-38ef-4d02-987c-2620770d3322@1.1.1.1:9828?security=none&type=tcp&headerType=http&path=%2F&host=varzesh3.com#♻️ 0 B | ⏳ : ∞ - BvvvyiA21",
+      "vless://bb4244a1-38ef-4d02-987c-2620770d3322@er1.v-sub.site:1517?security=none&type=tcp&headerType=http&path=%2F&host=varzesh3.com#🇫🇷/🇺🇸/🇫🇷 All Location",
+      "vless://bb4244a1-38ef-4d02-987c-2620770d3322@er2.v-sub.site:1517?security=none&type=tcp&headerType=http&path=%2F&host=varzesh3.com#🇩🇪 Germany 1",
+      "vless://bb4244a1-38ef-4d02-987c-2620770d3322@er3.v-sub.site:1517?security=none&type=tcp&headerType=http&path=%2F&host=varzesh3.com#🇩🇪 Germany 2",
+      "vless://bb4244a1-38ef-4d02-987c-2620770d3322@er4.v-sub.site:1517?security=none&type=tcp&headerType=http&path=%2F&host=varzesh3.com#🇩🇪 Germany 3",
+      "vless://bb4244a1-38ef-4d02-987c-2620770d3322@er5.v-sub.site:2434?security=reality&type=tcp&headerType=none&path=&host=&sni=www.chess.com&fp=chrome&pbk=yGgU4VVwpWk3sY54VgDxYVg77n5i-4jduHegq6PqPyA&sid=#🇩🇪 Germany 5",
+      "vless://bb4244a1-38ef-4d02-987c-2620770d3322@qow.mahi25.cfd:4928?security=none&type=tcp&headerType=http&path=%2F&host=varzesh3.com#🇳🇱 Netherland",
+      "vless://bb4244a1-38ef-4d02-987c-2620770d3322@wow.mahi25.cfd:3789?security=none&type=tcp&headerType=http&path=%2F&host=varzesh3.com#🇺🇸 USA",
+      "vless://bb4244a1-38ef-4d02-987c-2620770d3322@eow.mahi25.cfd:3799?security=none&type=tcp&headerType=http&path=%2F&host=varzesh3.com#🇫🇷 France",
+      "vless://bb4244a1-38ef-4d02-987c-2620770d3322@row.mahi25.cfd:3799?security=none&type=tcp&headerType=http&path=%2F&host=varzesh3.com#🇵🇱 Poland",
+      "vless://bb4244a1-38ef-4d02-987c-2620770d3322@tow.mahi25.cfd:1429?security=none&type=tcp&headerType=http&path=%2F&host=varzesh3.com#🏴 England"
+    ];
+    globalThis.NEWS=globalThis.NEWS||["Welcome to the panel! ✅"];
+    globalThis.BLOCKED=globalThis.BLOCKED||new Set(["spyUser","badguy123"]);
+
+    const url=new URL(req.url);
+    if(req.method==="POST"){
+      const b=await req.json().catch(()=>({}));
+      if(url.pathname==="/verify"&&CODES.has(b.code))return new Response(JSON.stringify({cfgs:CONFIGS}),{headers:{"content-type":"application/json"}});
+      if(url.pathname==="/checkspy"){return new Response(JSON.stringify({blocked:BLOCKED.has(b.id)}),{headers:{"content-type":"application/json"}});}
+      if(url.pathname==="/addcfg"&&b.admin===ADMIN_PASS){CONFIGS.push(b.cfg);return new Response("OK");}
+      if(url.pathname==="/addcode"&&b.admin===ADMIN_PASS){CODES.add(b.code);return new Response("OK");}
+      if(url.pathname==="/addnews"&&b.admin===ADMIN_PASS){NEWS.push(b.news);return new Response("OK");}
+      if(url.pathname==="/addblock"&&b.admin===ADMIN_PASS){BLOCKED.add(b.id);return new Response("OK");}
+      return new Response("Forbidden",{status:403});
+    }
+
+    return new Response(`<!DOCTYPE html><html><head><meta charset="utf-8">
+    <style>
+      body{background:#1b103a;color:#fff;font-family:sans-serif;text-align:center}
+      .box{background:#291d54;padding:20px;border-radius:15px;max-width:420px;margin:40px auto}
+      input,button{width:100%;margin:5px 0;padding:10px;border-radius:8px;border:none}
+      input{background:#2f2560;color:#fff}
+      button{background:#6d4bff;color:#fff;font-weight:bold;cursor:pointer}
+      button:hover{background:#5639c9}
+      pre{background:#2f2560;padding:10px;border-radius:8px;white-space:pre-wrap;text-align:left}
+      .hidden{display:none}
+      .news{background:#3a2a6e;padding:10px;margin-top:10px;border-radius:8px}
+      .alert{animation:flash 0.5s infinite alternate;font-size:24px;padding:30px;color:white}
+      @keyframes flash{from{background:#ff0000;}to{background:#660000;}}
+    </style></head><body>
+    <div class="box">
+      <h2>🔐 User Panel</h2>
+      <input id="p" type="password" placeholder="Enter Password">
+      <button onclick="p.value==='${USER_PASS}'?u.classList.remove('hidden'):alert('Wrong Password')">Login</button>
+      <div id="u" class="hidden">
+        <input id="spyid" placeholder="Enter Your ID">
+        <button onclick="fetch('/checkspy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:spyid.value})}).then(r=>r.json()).then(d=>{if(d.blocked){document.body.innerHTML='<div class=alert>🚨 BLOCKED! 🚨</div>';document.body.style.background='red';}else{alert('✅ Safe')}})">Check Spy</button>
+        <input id="c" placeholder="Enter Verification Code">
+        <button onclick="fetch('/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:c.value})}).then(r=>r.json()).then(d=>{cfg.textContent=d.cfgs.join('\\n');copy.disabled=false}).catch(()=>alert('Invalid Code'))">Verify</button>
+        <pre id="cfg">Configs are hidden</pre>
+        <button id="copy" disabled onclick="navigator.clipboard.writeText(cfg.textContent);alert('Copied!')">Copy</button>
+        <div class="news"><h3>📢 News</h3><div>${NEWS.join("<br>")}</div></div>
+      </div>
+      <hr><h3>Admin Panel</h3>
+      <input id="ap" type="password" placeholder="Admin Password">
+      <button onclick="ap.value==='${ADMIN_PASS}'?a.classList.remove('hidden'):alert('Wrong Admin Password')">Login</button>
+      <div id="a" class="hidden">
+        <input id="newcfg" placeholder="New Config">
+        <button onclick="fetch('/addcfg',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({admin:'${ADMIN_PASS}',cfg:newcfg.value})}).then(r=>alert('Config Added'))">Add Config</button>
+        <input id="newcode" placeholder="New Code">
+        <button onclick="fetch('/addcode',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({admin:'${ADMIN_PASS}',code:newcode.value})}).then(r=>alert('Code Added'))">Add Code</button>
+        <input id="newnews" placeholder="Add News">
+        <button onclick="fetch('/addnews',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({admin:'${ADMIN_PASS}',news:newnews.value})}).then(r=>alert('News Added'))">Add News</button>
+        <input id="newblock" placeholder="Block ID">
+        <button onclick="fetch('/addblock',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({admin:'${ADMIN_PASS}',id:newblock.value})}).then(r=>alert('User Blocked'))">Block User</button>
+      </div>
+    </div></body></html>`,{headers:{"content-type":"text/html"}});
+  }
+}
